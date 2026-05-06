@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv init *)",
+      "Bash(uv add *)",
+      "Bash(uv run *)",
+      "Bash(echo \"Backend PID: $!\")",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(echo \"Frontend PID: $!\")",
+      "Bash(curl -s http://localhost:8000/concepts)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(curl -s http://localhost:5173/src/index.css)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'{len\\(d\\)} concetti'\\); [print\\(f'  [{c[\\\\\"type\\\\\"]:10}] {c[\\\\\"title\\\\\"]}'\\) for c in d[:5]]; print\\('  ...'\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'{len\\(d\\)} concetti dal DB'\\); [print\\(f'  [{c[\\\\\"type\\\\\"]:10}] {c[\\\\\"title\\\\\"]}'\\) for c in d[:4]]; print\\('  ...'\\)\")",
+      "Bash(curl -s http://localhost:8000/auth/register -X POST -H \"Content-Type: application/json\" -d '{\"email\":\"test@cando.it\",\"password\":\"secret\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:8000/auth/login -X POST -H \"Content-Type: application/json\" -d '{\"email\":\"test@cando.it\",\"password\":\"secret\"}')",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(zcat \"/home/luca/.claude/projects/-home-luca-Documents-cando/f72ac65a-d133-4e6b-9f5a-9596fe56b9ec/tool-results/webfetch-1777632395706-jfs8tf.bin\")",
+      "Bash(gunzip -c \"/home/luca/.claude/projects/-home-luca-Documents-cando/f72ac65a-d133-4e6b-9f5a-9596fe56b9ec/tool-results/webfetch-1777632395706-jfs8tf.bin\")",
+      "Bash(mkdir -p /tmp/cando-design)",
+      "Bash(tar -xzf \"/home/luca/.claude/projects/-home-luca-Documents-cando/f72ac65a-d133-4e6b-9f5a-9596fe56b9ec/tool-results/webfetch-1777632395706-jfs8tf.bin\")",
+      "WebFetch(domain:claude.ai)",
+      "Bash(echo \"backend pid: $!\")",
+      "Bash(echo \"frontend pid: $!\")",
+      "Bash(kill 50602 50736)",
+      "Bash(pkill -f \"uvicorn main:app\")",
+      "Bash(pkill -f \"vite\")",
+      "Bash(lsof -ti:8000,5173,5174)",
+      "Bash(xargs kill *)",
+      "Bash(mkdir -p /tmp/cando-design4)",
+      "Bash(cp \"/home/luca/.claude/projects/-home-luca-Documents-cando/f72ac65a-d133-4e6b-9f5a-9596fe56b9ec/tool-results/webfetch-1777806590188-tr78or.bin\" /tmp/cando-design4/bundle.tar.gz)",
+      "Bash(tar -xzf bundle.tar.gz)",
+      "Bash(npm test *)",
+      "Bash(python3 -)"
+    ]
+  }
+}
