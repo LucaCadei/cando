@@ -1,27 +1,37 @@
 export const API = "http://localhost:8000";
 
-export const TYPE_LABEL = { number: "numero", date: "data", idea: "idea", filosofia: "filosofia" };
+export const WIKI_CATEGORIES = {
+  persona:  { label: "persona",  background: "#FFD43A", color: "#0E0E0C" },
+  luogo:    { label: "luogo",    background: "#FF5A8A", color: "#0E0E0C" },
+  scienza:  { label: "scienza",  background: "#7C4DFF", color: "#E5E4DF" },
+  arte:     { label: "arte",     background: "#0E0E0C", color: "#E5E4DF" },
+  evento:   { label: "evento",   background: "#FF8C00", color: "#E5E4DF" },
+};
+
+export const TYPE_LABEL = Object.fromEntries(
+  Object.entries(WIKI_CATEGORIES).map(([k, v]) => [k, v.label])
+);
+
+export const ALL_TYPES = Object.keys(WIKI_CATEGORIES);
 
 export const SAMPLES = [
-  { type: "number",    title: "42",                       description: "La risposta a tutto" },
-  { type: "idea",      title: "Gravity as a service",     description: "Noleggia gravità on demand" },
-  { type: "date",      title: "1 gennaio 2000",           description: "Il millennium bug che non fu" },
-  { type: "number",    title: "1.618",                    description: "La proporzione aurea" },
-  { type: "idea",      title: "Silenzio brevettato",      description: "Un secondo di silenzio assoluto" },
-  { type: "date",      title: "29 febbraio 2000",         description: "Il giorno che non doveva esistere" },
-  { type: "number",    title: "0",                        description: "Il numero che ha cambiato la matematica" },
-  { type: "idea",      title: "Nome per un colore",       description: "Un colore senza nome, tutto tuo" },
-  { type: "date",      title: "4 ottobre 1957",           description: "Il primo satellite nello spazio" },
-  { type: "number",    title: "π",                        description: "Infinito e non periodico" },
-  { type: "idea",      title: "Odore di pioggia",         description: "Il petrichor come concetto in vendita" },
-  { type: "date",      title: "9 novembre 1989",          description: "La caduta del muro" },
-  { type: "number",    title: "−273.15",                  description: "Lo zero assoluto in gradi Celsius" },
-  { type: "filosofia", title: "Permanenza",               description: "Ciò che rimane quando tutto cambia" },
-  { type: "filosofia", title: "Essere",                   description: "Perché c'è qualcosa piuttosto che niente?" },
-  { type: "idea",      title: "L'istante tra due pensieri", description: "Il silenzio cognitivo" },
+  { type: "persona",  title: "Galileo Galilei",        description: "Astronomo, fisico, matematico" },
+  { type: "luogo",    title: "Colosseo",                description: "L'anfiteatro della Roma imperiale" },
+  { type: "scienza",  title: "DNA",                     description: "Il codice della vita" },
+  { type: "arte",     title: "Monna Lisa",              description: "Il sorriso più famoso del mondo" },
+  { type: "persona",  title: "Leonardo da Vinci",       description: "Genio del Rinascimento" },
+  { type: "evento",   title: "Programma Apollo",        description: "L'umanità sulla Luna" },
+  { type: "scienza",  title: "Buco nero",               description: "Dove la gravità vince su tutto" },
+  { type: "luogo",    title: "Venezia",                 description: "La città sull'acqua" },
+  { type: "arte",     title: "Cappella Sistina",        description: "Il soffitto di Michelangelo" },
+  { type: "persona",  title: "Albert Einstein",         description: "E = mc²" },
+  { type: "evento",   title: "Rivoluzione francese",   description: "Liberté, Égalité, Fraternité" },
+  { type: "scienza",  title: "Internet",                description: "La rete che ha cambiato tutto" },
+  { type: "luogo",    title: "Machu Picchu",            description: "La città perduta degli Inca" },
+  { type: "persona",  title: "Maria Curie",             description: "Prima donna premio Nobel" },
+  { type: "arte",     title: "La notte stellata",       description: "Van Gogh e il cielo di Saint-Rémy" },
+  { type: "evento",   title: "Rinascimento",            description: "La rinascita dell'arte e del sapere" },
 ];
-
-export const ALL_TYPES = ["number", "date", "idea", "filosofia"];
 
 export const SORT_OPTIONS = [
   { value: "default",    label: "Predefinito" },

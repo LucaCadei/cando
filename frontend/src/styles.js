@@ -1,102 +1,378 @@
+/* ── cando design system v2 — brutalista contemporaneo ───────────────────
+   Regole fondamentali:
+   - bordi sempre 2px nero
+   - ombre offset, mai blur (4px 4px 0 colore)
+   - hover = translate(4px, 4px) + ombra collassa
+   - niente radius
+   - accenti: viola primario, giallo su prezzi/eyebrow, rosa su tag
+   ──────────────────────────────────────────────────────────────────────── */
+
+const INK  = "#0E0E0C";
+const BG   = "#E5E4DF";
+const VIO  = "#7C4DFF";
+const YEL  = "#FFD43A";
+const PINK = "#FF5A8A";
+const DIM  = "#5C5A52";
+const MUTE = "#8A8378";
+
+const B = `2px solid ${INK}`;
+
+// Base condivisa per tutti i bottoni
+const btnBase = {
+  display: "inline-flex", alignItems: "center", justifyContent: "center",
+  gap: 6,
+  fontFamily: "var(--f-body)", fontWeight: 700, fontSize: 12,
+  textTransform: "uppercase", letterSpacing: "0.05em",
+  border: B, cursor: "pointer",
+  transition: "all var(--m-fast)",
+  padding: "10px 18px", lineHeight: 1,
+};
+
 const s = {
-  page: { fontFamily: "var(--font-ui)", color: "var(--color-fg)", background: "var(--color-bg)", minHeight: "100vh" },
 
-  // header
-  header: { display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", padding: "14px 48px", borderBottom: "1px solid var(--color-grey-100)", background: "var(--color-white)" },
-  wordmark: { fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 300, letterSpacing: "0.06em", color: "var(--color-fg)" },
+  // ── pagina ────────────────────────────────────────────────────────────
+  page: { fontFamily: "var(--f-body)", color: INK, background: BG, minHeight: "100vh" },
+
+  // ── marquee bar (striscia nera in cima) ───────────────────────────────
+  marqueeBar: {
+    background: INK, color: BG,
+    padding: "10px 0",
+    fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase",
+    overflow: "hidden", whiteSpace: "nowrap",
+    borderBottom: B,
+  },
+  marqueeTrack: {
+    display: "inline-flex", gap: 48,
+    animation: "marquee 40s linear infinite",
+  },
+
+  // ── header ────────────────────────────────────────────────────────────
+  header: {
+    background: BG, borderBottom: B,
+    padding: "16px 40px",
+    display: "flex", alignItems: "center", justifyContent: "space-between",
+    position: "sticky", top: 0, zIndex: 50,
+  },
+  wordmark: {
+    display: "inline-flex", alignItems: "center", gap: 4,
+    background: "none", border: "none", cursor: "pointer", padding: 0,
+    fontFamily: "var(--f-body)", fontSize: 26, fontWeight: 900,
+    letterSpacing: "-0.04em", color: INK,
+  },
+  wordmarkDot: {
+    width: 10, height: 10, background: VIO,
+    display: "inline-block", flexShrink: 0,
+  },
   headerCenter: { display: "flex", justifyContent: "center" },
-  nav: { display: "flex", alignItems: "center", gap: 12, justifyContent: "flex-end" },
-  // search
-  searchWrap: { position: "relative", width: 320 },
-  searchInput: { width: "100%", fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--color-fg)", padding: "8px 16px", border: "1px solid var(--color-grey-100)", borderRadius: 20, outline: "none", background: "var(--color-bg)", boxSizing: "border-box" },
-  searchDropdown: { position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, background: "var(--color-white)", border: "1px solid var(--color-grey-100)", borderRadius: 4, boxShadow: "0 8px 32px rgba(26,26,24,0.10)", zIndex: 200, overflow: "hidden" },
-  searchResultItem: { display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", cursor: "pointer", borderBottom: "1px solid var(--color-grey-100)" },
-  searchResultAvatar: { width: 28, height: 28, borderRadius: "50%", background: "var(--color-fg)", color: "var(--color-bg)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontSize: 12, fontWeight: 300, flexShrink: 0 },
-  navEmail: { fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--color-fg-muted)" },
-  coinBadge: { display: "inline-flex", alignItems: "center", background: "#F0F0EE", border: "1px solid var(--color-grey-100)", borderRadius: 3, padding: "5px 10px" },
-  hamburger: { display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer", padding: "4px", color: "var(--color-fg)" },
+  nav: { display: "flex", alignItems: "center", gap: 10, justifyContent: "flex-end" },
+  navEmail: {
+    fontFamily: "var(--f-mono)", fontSize: 11, color: DIM, letterSpacing: "0.04em",
+  },
+  coinBadge: {
+    display: "inline-flex", alignItems: "center",
+    background: YEL, border: B, padding: "5px 10px", gap: 6,
+  },
+  hamburger: {
+    display: "flex", alignItems: "center", justifyContent: "center",
+    background: "none", border: B, cursor: "pointer", padding: "7px",
+    color: INK, position: "relative",
+  },
+  notifDot: {
+    position: "absolute", top: -6, right: -6,
+    background: PINK, color: "#fff",
+    fontFamily: "var(--f-body)", fontSize: 9, fontWeight: 700,
+    border: `2px solid ${INK}`, padding: "1px 4px", minWidth: 16,
+    textAlign: "center", lineHeight: "14px", pointerEvents: "none",
+  },
 
-  // buttons
-  btnPrimary:    { display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-ui)", fontSize: 11, letterSpacing: "0.04em", fontWeight: 500, padding: "7px 18px", borderRadius: 3, border: "1px solid var(--color-fg)", background: "var(--color-fg)", color: "var(--color-bg)", cursor: "pointer", transition: "opacity var(--transition)" },
-  btnSecondary:  { display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-ui)", fontSize: 11, letterSpacing: "0.04em", padding: "7px 18px", borderRadius: 3, border: "1px solid var(--color-fg)", background: "transparent", color: "var(--color-fg)", cursor: "pointer", transition: "opacity var(--transition)" },
-  btnGhost:      { display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-ui)", fontSize: 11, letterSpacing: "0.04em", padding: "7px 14px", borderRadius: 3, border: "1px solid var(--color-grey-100)", background: "transparent", color: "var(--color-fg-secondary)", cursor: "pointer", transition: "opacity var(--transition)" },
-  btnSave:       { display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.04em", padding: "4px 10px", borderRadius: 3, border: "1px solid var(--color-grey-100)", background: "transparent", color: "var(--color-fg-muted)", cursor: "pointer", transition: "opacity var(--transition)" },
-  btnSaveActive: { display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.04em", padding: "4px 10px", borderRadius: 3, border: "1px solid var(--color-accent-light)", background: "var(--color-accent-subtle)", color: "var(--color-accent-dark)", cursor: "pointer", transition: "opacity var(--transition)" },
+  // ── bottoni ───────────────────────────────────────────────────────────
+  btnPrimary:    { ...btnBase, background: INK,  color: BG,  boxShadow: `4px 4px 0 ${VIO}` },
+  btnSecondary:  { ...btnBase, background: VIO,  color: BG,  boxShadow: `4px 4px 0 ${INK}` },
+  btnGhost:      { ...btnBase, background: BG,   color: INK, boxShadow: "none" },
+  btnSave:       { ...btnBase, background: BG,   color: INK, boxShadow: "none", fontSize: 11 },
+  btnSaveActive: { ...btnBase, background: VIO,  color: BG,  boxShadow: `4px 4px 0 ${INK}`, fontSize: 11 },
 
-  // landing
-  landingMain:   { display: "flex", flexDirection: "column", alignItems: "stretch", padding: "96px 0 80px", gap: 80 },
-  hero:          { alignSelf: "center", textAlign: "center", maxWidth: 640, padding: "0 24px" },
-  heroEyebrow:   { fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--color-fg-muted)", marginBottom: 28 },
-  heroTitle:     { fontFamily: "var(--font-display)", fontSize: "clamp(52px, 8vw, 96px)", fontWeight: 300, lineHeight: 1.05, letterSpacing: "-0.02em", color: "var(--color-fg)", marginBottom: 28 },
-  heroAnd:       { fontStyle: "italic", color: "var(--color-accent)", fontWeight: 300 },
-  heroSub:       { fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 400, lineHeight: 1.65, color: "var(--color-fg-secondary)" },
-  showcaseRule:  { borderTop: "1px solid var(--color-grey-100)", margin: "0 48px" },
-  showcase:      { width: "100%", position: "relative" },
-  showcaseLabel: { fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--color-fg-muted)", margin: "0 0 20px 48px" },
-  fadeLeft:      { position: "absolute", top: 28, left: 0, width: 80, bottom: 0, background: "linear-gradient(to right, var(--color-bg), transparent)", pointerEvents: "none" },
-  fadeRight:     { position: "absolute", top: 28, right: 0, width: 80, bottom: 0, background: "linear-gradient(to left, var(--color-bg), transparent)", pointerEvents: "none" },
-  sampleCard:    { flexShrink: 0, width: 220, background: "var(--color-white)", border: "1px solid var(--color-grey-100)", borderRadius: 3, padding: "24px", display: "flex", flexDirection: "column", gap: 10 },
+  // ── ricerca ───────────────────────────────────────────────────────────
+  searchWrap: { position: "relative" },
+  searchInput: {
+    width: 220, fontFamily: "var(--f-body)", fontSize: 13, fontWeight: 500,
+    color: INK, padding: "10px 14px", border: B, outline: "none",
+    background: BG, boxSizing: "border-box", transition: "background var(--m-fast)",
+  },
+  searchDropdown: {
+    position: "absolute", top: "calc(100% - 2px)", left: 0, right: 0,
+    background: BG, border: B, zIndex: 200, overflow: "hidden",
+    boxShadow: `4px 4px 0 ${INK}`,
+  },
+  searchResultItem: {
+    display: "flex", alignItems: "center", gap: 12,
+    padding: "10px 14px", cursor: "pointer", borderBottom: B,
+  },
+  searchResultAvatar: {
+    width: 28, height: 28, background: INK, color: BG, flexShrink: 0,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    fontFamily: "var(--f-body)", fontSize: 12, fontWeight: 700,
+  },
 
-  // marketplace
-  marketLayout:  { display: "flex", minHeight: "calc(100vh - 57px)" },
-  sidebar:       { width: 220, borderRight: "1px solid var(--color-grey-100)", padding: "32px 24px", background: "var(--color-white)", flexShrink: 0, display: "flex", flexDirection: "column", gap: 10 },
-  sidebarSection: { fontFamily: "var(--font-ui)", fontSize: 10, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-fg-muted)", margin: "6px 0 4px" },
-  sidebarRule:   { border: "none", borderTop: "1px solid var(--color-grey-100)", margin: "6px 0" },
-  sidebarInput:  { width: "100%", fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--color-fg)", padding: "7px 10px", border: "1px solid var(--color-grey-100)", borderRadius: 3, outline: "none", background: "var(--color-bg)", boxSizing: "border-box" },
-  filterRow:     { display: "flex", alignItems: "center", gap: 8, cursor: "pointer" },
-  marketMain:    { flex: 1, padding: "32px 40px" },
-  marketLabel:   { fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-fg-muted)", marginBottom: 24 },
-  grid:          { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 },
-  conceptCard:   { background: "var(--color-white)", border: "1px solid var(--color-grey-100)", borderRadius: 3, padding: "24px", display: "flex", flexDirection: "column", gap: 10, transition: "border-color var(--transition)", cursor: "default" },
-  conceptTitle:  { fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 300, color: "var(--color-fg)", lineHeight: 1.15, margin: 0 },
-  conceptDesc:   { fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--color-fg-muted)", lineHeight: 1.6, flex: 1, margin: 0 },
-  conceptFooter: { display: "flex", flexDirection: "column", gap: 6, marginTop: 8 },
-  errorMsg:      { fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--color-error)", border: "1px solid #E8D0D0", background: "#FDF5F5", borderRadius: 3, padding: "8px 12px", marginBottom: 24 },
-  cardError:     { fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--color-error)", margin: 0 },
+  // ── landing ───────────────────────────────────────────────────────────
+  landingMain: { display: "flex", flexDirection: "column", alignItems: "stretch" },
+  hero: {
+    padding: "72px 40px 80px",
+    maxWidth: 1280, margin: "0 auto", width: "100%",
+  },
+  heroEyebrow: {
+    display: "inline-block", background: YEL, border: B,
+    padding: "4px 10px", fontSize: 11, fontWeight: 700,
+    letterSpacing: "0.08em", textTransform: "uppercase", color: INK,
+    marginBottom: 24,
+  },
+  heroTitle: {
+    fontFamily: "var(--f-body)", fontSize: "clamp(64px, 9vw, 120px)",
+    fontWeight: 900, lineHeight: 0.88, letterSpacing: "-0.05em",
+    color: INK, marginBottom: 28,
+  },
+  heroTitleAccent: { color: VIO },
+  heroSerif: {
+    fontFamily: "var(--f-serif)", fontStyle: "italic",
+    fontWeight: 400, letterSpacing: "-0.02em",
+  },
+  heroSub: { fontSize: 17, lineHeight: 1.55, maxWidth: 460, fontWeight: 500, color: INK },
+  heroAnd:  { fontFamily: "var(--f-serif)", fontStyle: "italic", fontWeight: 400 },
+  heroActions: { display: "flex", gap: 12, marginTop: 32 },
 
-  // modal
-  overlay:         { position: "fixed", inset: 0, background: "rgba(26,26,24,0.4)", backdropFilter: "blur(3px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 },
-  modal:           { background: "var(--color-white)", borderRadius: 4, padding: "40px 44px", width: 380, boxShadow: "var(--shadow-xl)", position: "relative" },
-  detailModal:     { background: "var(--color-white)", borderRadius: 4, padding: "48px 52px", width: 560, maxWidth: "90vw", boxShadow: "var(--shadow-xl)", position: "relative" },
-  modalClose:      { position: "absolute", top: 16, right: 16, background: "none", border: "none", cursor: "pointer", color: "var(--color-fg-muted)", display: "flex", padding: 4 },
-  modalTitle:      { fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 300, letterSpacing: "-0.01em", textAlign: "center", marginBottom: 28, color: "var(--color-fg)" },
-  modalForm:       { display: "flex", flexDirection: "column", gap: 14 },
-  fieldGroup:      { display: "flex", flexDirection: "column", gap: 5 },
-  fieldLabel:      { fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-fg-secondary)" },
-  fieldInput:      { fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--color-fg)", padding: "9px 12px", border: "1px solid var(--color-grey-100)", borderRadius: 3, outline: "none", background: "var(--color-white)", width: "100%" },
-  modalError:      { fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--color-error)", textAlign: "center" },
-  modalSwitch:     { marginTop: 20, fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--color-fg-muted)", textAlign: "center" },
-  modalSwitchLink: { color: "var(--color-fg)", fontWeight: 500, cursor: "pointer", textDecoration: "underline" },
+  // showcase carosello
+  showcaseSection: {
+    borderTop: B, borderBottom: B,
+    background: BG, overflow: "hidden", position: "relative",
+    padding: "24px 0 32px",
+  },
+  showcaseLabel: {
+    fontFamily: "var(--f-body)", fontSize: 10, letterSpacing: "0.1em",
+    textTransform: "uppercase", color: DIM, fontWeight: 700,
+    margin: "0 0 16px 40px",
+  },
+  sampleCard: {
+    flexShrink: 0, width: 240, background: BG, border: B,
+    padding: "20px", display: "flex", flexDirection: "column", gap: 10,
+    boxShadow: `4px 4px 0 ${INK}`,
+  },
+  scroll: { display: "flex", gap: 20, width: "max-content", animation: "marquee 50s linear infinite", padding: "4px 0 8px 40px" },
+  fadeLeft:  { position: "absolute", top: 0, left: 0, width: 60, bottom: 0, background: `linear-gradient(to right, ${BG}, transparent)`, pointerEvents: "none", zIndex: 1 },
+  fadeRight: { position: "absolute", top: 0, right: 0, width: 60, bottom: 0, background: `linear-gradient(to left, ${BG}, transparent)`, pointerEvents: "none", zIndex: 1 },
 
-  // profile page
-  profileWrap:        { background: "var(--color-bg)", minHeight: "calc(100vh - 57px)", padding: "48px 0 80px" },
-  profileInner:       { maxWidth: 960, margin: "0 auto", padding: "0 48px" },
-  profileBack:        { display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-ui)", fontSize: 11, letterSpacing: "0.04em", color: "var(--color-fg-muted)", background: "none", border: "none", cursor: "pointer", padding: "0 0 32px", transition: "color var(--transition)" },
-  profileHero:        { display: "flex", alignItems: "center", gap: 24, marginBottom: 40 },
-  avatarCircleLg:     { width: 72, height: 72, borderRadius: "50%", background: "var(--color-fg)", color: "var(--color-bg)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 300, flexShrink: 0 },
-  profileName:        { fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 300, color: "var(--color-fg)", letterSpacing: "-0.01em", margin: 0 },
-  profileStats:       { display: "flex", alignItems: "center", background: "var(--color-white)", border: "1px solid var(--color-grey-100)", borderRadius: 4, padding: "20px 32px", marginBottom: 40 },
-  profileStatItem:    { flex: 1, textAlign: "center" },
-  profileStatDivider: { width: 1, height: 40, background: "var(--color-grey-100)", flexShrink: 0 },
-  profileStatNum:     { fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 300, color: "var(--color-fg)", margin: "0 0 4px" },
-  profileTabBar:      { display: "flex", gap: 0, borderBottom: "1px solid var(--color-grey-100)", marginBottom: 40 },
-  profileTab:         { fontFamily: "var(--font-ui)", fontSize: 12, letterSpacing: "0.04em", color: "var(--color-fg-muted)", background: "none", border: "none", borderBottom: "2px solid transparent", padding: "10px 20px 10px 0", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "color var(--transition)" },
-  profileTabActive:   { color: "var(--color-fg)", borderBottom: "2px solid var(--color-fg)" },
-  profileTabBadge:    { fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--color-fg-muted)", background: "var(--color-bg-subtle)", border: "1px solid var(--color-grey-100)", borderRadius: 10, padding: "1px 6px" },
-  profileContent:     { paddingBottom: 40 },
-  profileEmpty:       { fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--color-fg-muted)", fontStyle: "italic", paddingTop: 8 },
-  profileGrid:        { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 },
-  profileCard:        { background: "var(--color-white)", border: "1px solid var(--color-grey-100)", borderRadius: 3, padding: "24px", display: "flex", flexDirection: "column", gap: 10 },
-  profileCardTitle:   { fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 300, color: "var(--color-fg)", lineHeight: 1.15, margin: 0 },
-  profileCardDesc:    { fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--color-fg-muted)", lineHeight: 1.6, flex: 1, margin: 0 },
-  profileCardFooter:  { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 },
-  secondaManoBadge:   { display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-fg-muted)" },
-  statLabel:          { fontFamily: "var(--font-ui)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-fg-muted)", margin: 0 },
-  userRow:            { display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: "var(--color-white)", border: "1px solid var(--color-grey-100)", borderRadius: 3, cursor: "pointer", transition: "border-color var(--transition)" },
-  userRowAvatar:      { width: 36, height: 36, borderRadius: "50%", background: "var(--color-fg)", color: "var(--color-bg)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 300, flexShrink: 0 },
-  notifDot:           { position: "absolute", top: -3, right: -5, background: "#E85B5B", color: "#fff", fontFamily: "var(--font-ui)", fontSize: 9, fontWeight: 600, borderRadius: 10, padding: "1px 4px", minWidth: 14, textAlign: "center", lineHeight: "14px", pointerEvents: "none" },
-  offerAcceptBtn:     { display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: 4, border: "1px solid #86EFAC", background: "#F0FDF4", color: "#16A34A", cursor: "pointer", flexShrink: 0 },
-  offerRejectBtn:     { display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: 4, border: "1px solid #FCA5A5", background: "#FEF2F2", color: "#DC2626", cursor: "pointer", flexShrink: 0 },
+  // ── marketplace ───────────────────────────────────────────────────────
+  marketLayout: { display: "flex", minHeight: "calc(100vh - 105px)" },
+
+  // pannello filtri scorrevole a sinistra
+  filterPanelOuter: {
+    overflow: "hidden", flexShrink: 0,
+    borderRight: B, background: BG,
+    transition: "width 220ms ease-out",
+    position: "sticky", top: 0,
+    alignSelf: "flex-start",
+    maxHeight: "100vh", overflowY: "auto",
+  },
+  filterPanelInner: {
+    width: 240, padding: "28px 20px",
+    display: "flex", flexDirection: "column", gap: 24,
+    boxSizing: "border-box",
+  },
+  filterPanelHeader: {
+    display: "flex", alignItems: "center", justifyContent: "space-between",
+    fontFamily: "var(--f-body)", fontSize: 11, fontWeight: 700,
+    letterSpacing: "0.08em", textTransform: "uppercase", color: INK,
+  },
+
+  // input inline (usato in filtri, form offerte ecc.)
+  sidebarInput: {
+    fontFamily: "var(--f-body)", fontSize: 12, fontWeight: 500,
+    color: INK, padding: "8px 10px", border: B,
+    outline: "none", background: BG, boxSizing: "border-box",
+    width: "100%",
+  },
+  sidebarSection: {
+    fontFamily: "var(--f-body)", fontSize: 10, fontWeight: 700,
+    letterSpacing: "0.08em", textTransform: "uppercase", color: DIM,
+    margin: "6px 0 4px",
+  },
+  sidebarRule: { border: "none", borderTop: B, margin: "8px 0" },
+
+  marketMain: { flex: 1, padding: "32px 40px" },
+  marketLabel: {
+    fontFamily: "var(--f-mono)", fontSize: 11, letterSpacing: "0.06em",
+    textTransform: "uppercase", color: DIM, marginBottom: 24,
+  },
+  grid: { display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 24 },
+
+  // ── concept card (marketplace) ────────────────────────────────────────
+  conceptCard: {
+    background: BG, border: B,
+    display: "flex", flexDirection: "column", cursor: "default",
+    boxShadow: `4px 4px 0 ${INK}`, transition: "all var(--m-fast)",
+  },
+  conceptBody: { padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8, flex: 1 },
+  conceptTitle: {
+    fontFamily: "var(--f-body)", fontSize: 20, fontWeight: 800,
+    color: INK, lineHeight: 1.1, margin: 0, letterSpacing: "-0.02em",
+  },
+  conceptDesc: {
+    fontFamily: "var(--f-body)", fontSize: 12, fontWeight: 500,
+    color: DIM, lineHeight: 1.6, flex: 1, margin: 0,
+  },
+  conceptFooter: {
+    display: "flex", flexDirection: "column", gap: 8, marginTop: 4,
+    borderTop: B, padding: "10px 16px 14px",
+  },
+
+  // ── modal ─────────────────────────────────────────────────────────────
+  overlay: {
+    position: "fixed", inset: 0, background: "rgba(14,14,12,0.65)",
+    display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100,
+  },
+  modal: {
+    background: BG, border: B, boxShadow: `8px 8px 0 ${INK}`,
+    padding: "40px 44px", width: 400, position: "relative",
+  },
+  detailModal: {
+    background: BG, border: B, boxShadow: `8px 8px 0 ${INK}`,
+    padding: "48px 52px", width: 580, maxWidth: "90vw", position: "relative",
+  },
+  modalClose: {
+    position: "absolute", top: 14, right: 14,
+    background: "none", border: B, cursor: "pointer", color: INK,
+    display: "flex", padding: 7,
+  },
+  modalTitle: {
+    fontFamily: "var(--f-body)", fontSize: 28, fontWeight: 900,
+    letterSpacing: "-0.03em", textAlign: "center", marginBottom: 28, color: INK,
+  },
+  modalForm: { display: "flex", flexDirection: "column", gap: 14 },
+  fieldGroup: { display: "flex", flexDirection: "column", gap: 6 },
+  fieldLabel: {
+    fontFamily: "var(--f-body)", fontSize: 10, letterSpacing: "0.08em",
+    textTransform: "uppercase", color: DIM, fontWeight: 700,
+  },
+  fieldInput: {
+    fontFamily: "var(--f-body)", fontSize: 13, fontWeight: 500,
+    color: INK, padding: "10px 12px", border: B,
+    outline: "none", background: BG, width: "100%",
+  },
+  modalError: { fontFamily: "var(--f-body)", fontSize: 11, fontWeight: 700, color: "#FF3B30", textAlign: "center" },
+  modalSwitch: { marginTop: 20, fontFamily: "var(--f-body)", fontSize: 12, fontWeight: 500, color: DIM, textAlign: "center" },
+  modalSwitchLink: { color: INK, fontWeight: 700, cursor: "pointer", textDecoration: "underline" },
+
+  // ── messaggi errore ───────────────────────────────────────────────────
+  errorMsg: {
+    fontFamily: "var(--f-body)", fontSize: 12, fontWeight: 600, color: "#FF3B30",
+    border: `2px solid #FF3B30`, background: BG, padding: "10px 14px", marginBottom: 24,
+  },
+  cardError: { fontFamily: "var(--f-body)", fontSize: 11, fontWeight: 600, color: "#FF3B30", margin: 0 },
+
+  // ── profilo ───────────────────────────────────────────────────────────
+  profileWrap: { background: BG, minHeight: "calc(100vh - 105px)", padding: "48px 0 80px" },
+  profileInner: { maxWidth: 960, margin: "0 auto", padding: "0 40px" },
+  profileBack: {
+    display: "inline-flex", alignItems: "center", gap: 8,
+    fontFamily: "var(--f-body)", fontSize: 11, fontWeight: 700,
+    letterSpacing: "0.06em", textTransform: "uppercase",
+    color: DIM, background: "none", border: "none", cursor: "pointer", padding: "0 0 32px",
+  },
+  profileHero: { display: "flex", alignItems: "center", gap: 20, marginBottom: 36 },
+  avatarCircleLg: {
+    width: 72, height: 72, background: INK, color: BG, flexShrink: 0,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    fontFamily: "var(--f-body)", fontSize: 28, fontWeight: 900,
+    border: B,
+  },
+  profileName: {
+    fontFamily: "var(--f-body)", fontSize: 32, fontWeight: 900,
+    letterSpacing: "-0.03em", color: INK, margin: 0,
+  },
+
+  // stats strip gialla
+  profileStats: {
+    display: "flex", alignItems: "stretch",
+    background: YEL, border: B, boxShadow: `4px 4px 0 ${INK}`,
+    marginBottom: 40,
+  },
+  profileStatItem: { flex: 1, textAlign: "center", padding: "18px 24px" },
+  profileStatDivider: { width: 2, background: INK, flexShrink: 0 },
+  profileStatNum: {
+    fontFamily: "var(--f-body)", fontSize: 28, fontWeight: 900,
+    letterSpacing: "-0.03em", color: INK, margin: "0 0 4px",
+  },
+  statLabel: {
+    fontFamily: "var(--f-body)", fontSize: 10, letterSpacing: "0.08em",
+    textTransform: "uppercase", color: INK, fontWeight: 700, margin: 0,
+  },
+
+  profileTabBar: { display: "flex", gap: 0, borderBottom: B, marginBottom: 40 },
+  profileTab: {
+    fontFamily: "var(--f-body)", fontSize: 11, fontWeight: 700,
+    letterSpacing: "0.06em", textTransform: "uppercase",
+    color: DIM, background: "none", border: "none", borderBottom: "2px solid transparent",
+    padding: "10px 20px 10px 0", cursor: "pointer",
+    display: "inline-flex", alignItems: "center", gap: 8,
+  },
+  profileTabActive: { color: INK, borderBottom: `2px solid ${INK}` },
+  profileTabBadge: {
+    fontFamily: "var(--f-mono)", fontSize: 10, color: INK,
+    background: YEL, border: B, padding: "1px 6px",
+  },
+  profileContent: { paddingBottom: 40 },
+  profileEmpty: { fontFamily: "var(--f-body)", fontSize: 14, fontWeight: 500, color: DIM, paddingTop: 8 },
+  profileGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 },
+
+  // card nel profilo (owned / saved)
+  profileCard: {
+    background: BG, border: B,
+    padding: "0", display: "flex", flexDirection: "column",
+    boxShadow: `4px 4px 0 ${INK}`,
+  },
+  profileCardBody: { padding: "18px 20px", display: "flex", flexDirection: "column", gap: 10, flex: 1 },
+  profileCardTitle: {
+    fontFamily: "var(--f-body)", fontSize: 20, fontWeight: 800,
+    color: INK, lineHeight: 1.1, margin: 0, letterSpacing: "-0.02em",
+  },
+  profileCardDesc: {
+    fontFamily: "var(--f-body)", fontSize: 12, fontWeight: 500,
+    color: DIM, lineHeight: 1.6, flex: 1, margin: 0,
+  },
+  profileCardFooter: {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    borderTop: B, padding: "14px 20px 18px",
+  },
+
+  // ── badge seconda mano ────────────────────────────────────────────────
+  secondaManoBadge: {
+    display: "inline-flex", alignItems: "center", gap: 4,
+    fontFamily: "var(--f-mono)", fontSize: 9, letterSpacing: "0.08em",
+    textTransform: "uppercase", color: DIM,
+  },
+
+  // ── offerte (pulsanti accetta/rifiuta) ────────────────────────────────
+  offerAcceptBtn: {
+    display: "flex", alignItems: "center", justifyContent: "center",
+    width: 28, height: 28, border: `2px solid ${INK}`,
+    background: YEL, color: INK, cursor: "pointer", flexShrink: 0,
+  },
+  offerRejectBtn: {
+    display: "flex", alignItems: "center", justifyContent: "center",
+    width: 28, height: 28, border: `2px solid ${INK}`,
+    background: "#FF3B30", color: BG, cursor: "pointer", flexShrink: 0,
+  },
+
+  // ── user row (risultati ricerca utenti in pagine) ─────────────────────
+  userRow: {
+    display: "flex", alignItems: "center", gap: 14, padding: "14px 18px",
+    background: BG, border: B, cursor: "pointer",
+    boxShadow: `4px 4px 0 ${INK}`, transition: "all var(--m-fast)",
+  },
+  userRowAvatar: {
+    width: 36, height: 36, background: INK, color: BG, flexShrink: 0,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    fontFamily: "var(--f-body)", fontSize: 16, fontWeight: 700,
+  },
 };
 
 export default s;

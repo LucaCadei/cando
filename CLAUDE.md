@@ -42,6 +42,10 @@ Il frontend chiama il backend direttamente via `fetch` su `http://localhost:8000
 
 Le rotte `/piazza`, `/profilo`, `/utenti/:userId` richiedono autenticazione — altrimenti redirect a `/`.
 
+## Comportamento atteso
+
+Se il messaggio dell'utente è una domanda esplorativa ("è meglio fare X?", "quanto è complesso Y?", "cosa ne pensi di Z?"), rispondi solo con la tua opinione/valutazione — **non implementare nulla**. Aspetta un'indicazione esplicita ("fallo", "vai", "implementa") prima di toccare il codice.
+
 ## Convenzioni
 
 **Backend:** usa sempre `uv run <cmd>` invece di `python` o `pip` direttamente. Le dipendenze si aggiungono con `uv add <pacchetto>`.

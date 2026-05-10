@@ -1,72 +1,118 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap');
+/* ── Design System v2: Brutalista Contemporaneo ──────────────────────────── */
 
-/* ── Tokens ──────────────────────────────────────────────── */
 :root {
-  --color-bg:           #F7F7F6;
-  --color-bg-subtle:    #F0F0EE;
+  /* superfici */
+  --c-bg:        #E5E4DF;
+  --c-bg-warm:   #EDE9DC;
+  --c-paper:     #FFFFFF;
+  --c-ink:       #0E0E0C;
+  --c-ink-dim:   #5C5A52;
+  --c-ink-mute:  #8A8378;
+
+  /* accenti brand */
+  --c-violet:      #7C4DFF;
+  --c-violet-deep: #5A2EE0;
+  --c-yellow:      #FFD43A;
+  --c-pink:        #FF5A8A;
+  --c-green:       #00C896;
+  --c-red:         #FF3B30;
+
+  /* font stack */
+  --f-body:    'Inter', -apple-system, sans-serif;
+  --f-serif:   'Cormorant Garamond', Georgia, serif;
+  --f-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* alias compatibilità (usati da componenti vecchi non ancora riscritti) */
+  --font-display: 'Inter', -apple-system, sans-serif;
+  --font-ui:      'Inter', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  --font-sans:    'Inter', -apple-system, sans-serif;
+
+  /* colori compat (rimappati ai nuovi token) */
+  --color-bg:           #E5E4DF;
+  --color-bg-subtle:    #EDE9DC;
   --color-white:        #FFFFFF;
-  --color-fg:           #1A1A18;
-  --color-fg-secondary: #6E6E6A;
-  --color-fg-muted:     #9A9A96;
-  --color-grey-100:     #E8E8E6;
-  --color-grey-200:     #D4D4D0;
-  --color-grey-300:     #BEBEBA;
-  --color-grey-400:     #9A9A96;
-  --color-grey-600:     #4E4E4A;
-  --color-grey-700:     #3A3A38;
-  --color-silver:       #C8C8C4;
-  --color-accent:       #8FA68C;
-  --color-accent-light: #B4C8B1;
-  --color-accent-dark:  #6D8C6A;
-  --color-accent-subtle:#EFF3EE;
-  --color-error:        #A05050;
+  --color-fg:           #0E0E0C;
+  --color-fg-secondary: #5C5A52;
+  --color-fg-muted:     #8A8378;
+  --color-grey-100:     #C8C6C0;
+  --color-grey-200:     #AEACA6;
+  --color-grey-300:     #8A8880;
+  --color-grey-400:     #5C5A52;
+  --color-accent:       #7C4DFF;
+  --color-accent-light: #9E77FF;
+  --color-accent-dark:  #5A2EE0;
+  --color-accent-subtle:#EDE9FF;
+  --color-error:        #FF3B30;
 
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-ui:      'DM Sans', 'Helvetica Neue', sans-serif;
-  --font-mono:    'DM Mono', 'Courier New', monospace;
+  /* ombre: offset dure, mai blur */
+  --sh-sm:  3px 3px 0 var(--c-ink);
+  --sh-md:  4px 4px 0 var(--c-ink);
+  --sh-lg:  6px 6px 0 var(--c-ink);
+  --sh-xl:  8px 8px 0 var(--c-ink);
+  --sh-violet: 4px 4px 0 var(--c-violet);
+  --sh-yellow: 4px 4px 0 var(--c-yellow);
+  --sh-pink:   4px 4px 0 var(--c-pink);
 
-  --radius-sm:  2px;
-  --radius:     3px;
-  --radius-md:  4px;
-  --radius-lg:  8px;
+  /* shadow compat */
+  --shadow-sm:  var(--sh-sm);
+  --shadow-md:  var(--sh-md);
+  --shadow-lg:  var(--sh-lg);
+  --shadow-xl:  var(--sh-xl);
 
-  --shadow-sm:  0 1px 4px rgba(26,26,24,0.05);
-  --shadow-md:  0 2px 12px rgba(26,26,24,0.06);
-  --shadow-lg:  0 4px 24px rgba(26,26,24,0.08);
-  --shadow-xl:  0 8px 40px rgba(26,26,24,0.10);
+  /* bordi: sempre 2px nero */
+  --b: 2px solid var(--c-ink);
 
-  --transition: 150ms ease-out;
+  /* radius: 0 — niente arrotondamenti */
+  --radius-sm: 0px;
+  --radius:    0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+
+  /* motion */
+  --m-fast: 120ms ease-out;
+  --m-base: 180ms ease-out;
+  --transition: 120ms ease-out;
 }
 
 /* ── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
 
 body {
-  font-family: var(--font-ui);
+  font-family: var(--f-body);
+  font-weight: 500;
   font-size: 15px;
-  line-height: 1.65;
-  color: var(--color-fg);
-  background: var(--color-bg);
+  line-height: 1.55;
+  color: var(--c-ink);
+  background: var(--c-bg);
 }
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--c-bg); }
+::-webkit-scrollbar-thumb { background: var(--c-ink); border: 2px solid var(--c-bg); }
+
+/* ── Focus ───────────────────────────────────────────────── */
+*:focus-visible { outline: 3px solid var(--c-violet); outline-offset: 2px; }
 
 /* ── Marquee ─────────────────────────────────────────────── */
-.scroll-outer { overflow: hidden; padding: 4px 0 20px; }
-
-.scroll-track {
-  display: flex;
-  gap: 12px;
-  width: max-content;
-  animation: marquee 50s linear infinite;
-}
-
-.scroll-outer:hover .scroll-track { animation-play-state: paused; }
-
 @keyframes marquee {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(-33.33%); }
 }
 
-/* ── Drawer item hover ───────────────────────────────────── */
-.drawer-item:hover { background: var(--color-bg); }
+/* ── Hover helpers (bottoni brutalist) ───────────────────── */
+.btn-brutalist:hover {
+  transform: translate(4px, 4px);
+  box-shadow: none !important;
+}
+
+/* ── Input placeholders ──────────────────────────────────── */
+input::placeholder,
+textarea::placeholder { color: var(--c-ink-mute); opacity: 1; }
