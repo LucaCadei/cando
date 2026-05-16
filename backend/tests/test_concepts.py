@@ -32,10 +32,10 @@ def test_concept_detail_basic_structure(client):
     assert r.status_code == 200
     data = r.json()
     assert "concept" in data
-    assert "past_owners" in data
+    assert "ownership_history" in data
     assert "save_count" in data
     assert data["save_count"] == 0
-    assert data["past_owners"] == []
+    assert data["ownership_history"] == []
     assert data["current_owner"] is None
 
 
@@ -55,9 +55,10 @@ def test_concept_detail_tracks_past_owners(client):
     client.post(f"/concepts/{c['id']}/relist", json={"price": 100}, headers=auth(alice["token"]))
     client.post(f"/concepts/{c['id']}/buy", headers=auth(bob["token"]))
     r = client.get(f"/concepts/{c['id']}/detail")
-    past = r.json()["past_owners"]
-    assert "alice" in past
-    assert "bob" in past
+    history = r.json()["ownership_history"]
+    usernames = [h["username"] for h in history]
+    assert "alice" in usernames
+    assert "bob" in usernames
 
 
 def test_concept_detail_save_count(client):

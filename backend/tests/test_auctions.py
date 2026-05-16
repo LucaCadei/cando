@@ -269,7 +269,8 @@ def test_auction_get_returns_correct_data(client: TestClient):
     data = r.json()
     assert data["bid_count"] == 2
     assert data["current_bid"] == 200
-    assert data["bids"][0]["amount"] == 200   # più recente prima
+    assert data["bids"][0]["amount"] == 150   # ordine cronologico: prima offerta prima
+    assert data["bids"][1]["amount"] == 200
 
 
 def test_auction_resolves_with_winner(client: TestClient):

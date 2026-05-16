@@ -1,8 +1,9 @@
+import os
 import jwt
 import bcrypt
 from datetime import datetime, timedelta, timezone
 
-SECRET = "cando-dev-secret"
+SECRET = os.getenv("JWT_SECRET", "cando-dev-secret")
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_DAYS = 30
 

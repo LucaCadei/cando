@@ -353,9 +353,11 @@ class SaleNotifPublic(SQLModel):
 
 app = FastAPI()
 
+_cors_origins = os.getenv("CORS_ORIGIN", "http://localhost:5173").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=_cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

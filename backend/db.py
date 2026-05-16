@@ -2,9 +2,11 @@ import os
 from sqlmodel import SQLModel, Session, create_engine
 
 _here = os.path.dirname(os.path.abspath(__file__))
-DATABASE_URL = f"sqlite:///{os.path.join(_here, 'cando.db')}"
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(_here, 'cando.db')}")
 
-engine = create_engine(DATABASE_URL, echo=False)
+# SQLite richiede check_same_thread=False per non bloccare il thread di uvicorn
+_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, echo=False, connect_args=_connect_args)
 
 
 def create_tables():

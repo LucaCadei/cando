@@ -1,0 +1,6 @@
+__pycache__
+*.pyc
+.venv
+cando.db
+tests/
+.pytest_cache

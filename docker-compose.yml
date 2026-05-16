@@ -1,0 +1,63 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cando
+      POSTGRES_USER: cando
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cando-dev-password}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cando"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://cando:${DB_PASSWORD:-cando-dev-password}@db:5432/cando
+      JWT_SECRET: ${JWT_SECRET:-cando-dev-secret-change-in-prod}
+      ADMIN_KEY: ${ADMIN_KEY:-dev-key-insecure}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Servizio one-shot per popolare il catalogo — non parte con "docker compose up"
+  # Uso: docker compose run --rm populate --query "..." --type persona --count 10
+  populate:
+    build: ./backend
+    command: ["uv", "run", "python", "populate.py"]
+    environment:
+      DATABASE_URL: postgresql://cando:${DB_PASSWORD:-cando-dev-password}@db:5432/cando
+      POPULATE_QUERY: ${POPULATE_QUERY:-}
+      POPULATE_TYPE: ${POPULATE_TYPE:-}
+      POPULATE_COUNT: ${POPULATE_COUNT:-10}
+      POPULATE_PRICE: ${POPULATE_PRICE:-200}
+      POPULATE_LANG: ${POPULATE_LANG:-it}
+      POPULATE_UNLISTED: ${POPULATE_UNLISTED:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - tools
+
+volumes:
+  pg_data:

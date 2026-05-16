@@ -1,4 +1,4 @@
-export const API = "http://localhost:8000";
+export const API = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
 export const WIKI_CATEGORIES = {
   persona:  { label: "persona",  background: "#FFD43A", color: "#0E0E0C" },

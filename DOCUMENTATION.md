@@ -467,24 +467,102 @@ La chiave di default in sviluppo è `dev-key-insecure`. In produzione impostare 
 
 ## Note operative
 
-### Reset del database
+### Database
 
-Ogni modifica allo schema dei modelli richiede il reset del DB (SQLModel non gestisce migration automatiche):
+Il progetto usa **PostgreSQL** sia in sviluppo che in produzione, avviato tramite Docker. I dati persistono in un named volume Docker (`pg_data`) e sopravvivono a restart e rebuild. Solo `docker compose down -v` li elimina.
+
+SQLModel gestisce la creazione automatica delle tabelle all'avvio (`create_all`), ma **non le migration**: modifiche allo schema richiedono di ricreare il DB.
+
+### Avvio con Docker (sviluppo)
 
 ```bash
-rm -f backend/cando.db && cd backend && uv run python seed_dev.py
+cp .env.example .env          # prima volta
+docker compose up --build
 ```
 
-Il seed crea 4 utenti di test (`marco`, `giulia`, `luca`, `sofia` — password: `pass`) e scarica ~40 asset Wikipedia (con retry automatico su HTTP 429). Richiede connessione Internet durante l'esecuzione.
+| Servizio  | URL                        |
+|-----------|----------------------------|
+| Frontend  | http://localhost           |
+| Backend   | http://localhost:8000      |
+| API docs  | http://localhost:8000/docs |
 
-### Avvio
+Per rebuild di un solo servizio:
+```bash
+docker compose up --build backend
+```
+
+### Avvio senza Docker (sviluppo rapido)
+
+Richiede un PostgreSQL locale raggiungibile, oppure usa la variabile `DATABASE_URL` puntata a un'istanza esistente.
 
 ```bash
 # Backend
-cd backend && uv run uvicorn main:app --reload
+cd backend && DATABASE_URL=postgresql://... uv run uvicorn main:app --reload
 
 # Frontend
 cd frontend && npm run dev
 ```
 
-Docs interattive API: `http://localhost:8000/docs`
+### Seed dati di sviluppo
+
+Il seed ricrea il DB da zero con 4 utenti e ~40 asset Wikipedia. Richiede connessione Internet.
+
+**Con Docker:**
+```bash
+docker compose exec backend uv run python seed_dev.py
+```
+
+**Senza Docker:**
+```bash
+cd backend && uv run python seed_dev.py
+```
+
+Utenti creati: `marco`, `giulia`, `luca`, `sofia` — password: `pass`.
+
+### Aggiunta asset al catalogo
+
+Il servizio `populate` è definito nel docker-compose con profile `tools` — non parte con `docker compose up` ma si lancia on-demand:
+
+```bash
+# Con Docker (locale)
+docker compose run --rm populate --query "pittori rinascimentali" --type persona --count 10
+
+# Senza Docker
+cd backend && uv run python populate.py --query "pittori rinascimentali" --type persona --count 10
+
+# In produzione su Cloud Run Jobs
+gcloud run jobs execute populate \
+  --update-env-vars POPULATE_QUERY="pittori rinascimentali",POPULATE_TYPE=persona,POPULATE_COUNT=10
+```
+
+I parametri possono essere passati come flag CLI **o** come variabili d'ambiente (utile per Cloud Run Jobs):
+
+| Flag CLI    | Env var            | Default |
+|-------------|--------------------|---------|
+| `--query`   | `POPULATE_QUERY`   | —       |
+| `--type`    | `POPULATE_TYPE`    | —       |
+| `--count`   | `POPULATE_COUNT`   | 10      |
+| `--price`   | `POPULATE_PRICE`   | 200     |
+| `--lang`    | `POPULATE_LANG`    | it      |
+| `--unlisted`| `POPULATE_UNLISTED`| false   |
+
+I flag CLI hanno precedenza sulle variabili d'ambiente.
+
+### Variabili d'ambiente
+
+| Variabile      | Descrizione |
+|----------------|-------------|
+| `DB_PASSWORD`  | Password PostgreSQL |
+| `DATABASE_URL` | Connection string completa (sovrascrive `DB_PASSWORD` se impostata) |
+| `JWT_SECRET`   | Chiave per firmare i token — cambiare in produzione |
+| `ADMIN_KEY`    | Header `X-Admin-Key` per gli endpoint admin |
+| `VITE_API_URL` | URL del backend visibile dal browser (build-time) |
+| `CORS_ORIGIN`  | Origine frontend autorizzata dal backend (più origini separate da virgola) |
+
+### Test
+
+I test girano su SQLite in memoria e non richiedono PostgreSQL in esecuzione:
+
+```bash
+cd backend && uv run pytest
+```
