@@ -1,0 +1,67 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_ID: cando-496509
+  REGION: europe-west8
+  REGISTRY: europe-west8-docker.pkg.dev/cando-496509/cando
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      # ── Backend ──────────────────────────────────────────
+      - name: Build and push backend image
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/backend:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/backend:latest \
+            ./backend
+          docker push ${{ env.REGISTRY }}/backend:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/backend:latest
+
+      - name: Deploy backend to Cloud Run
+        id: backend
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: cando-backend
+          region: ${{ env.REGION }}
+          image: ${{ env.REGISTRY }}/backend:${{ github.sha }}
+          flags: >-
+            --allow-unauthenticated
+            --set-secrets=DATABASE_URL=DATABASE_URL:latest,JWT_SECRET=JWT_SECRET:latest,ADMIN_KEY=ADMIN_KEY:latest
+            --update-env-vars=CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+
+      # ── Frontend ─────────────────────────────────────────
+      - name: Build and push frontend image
+        run: |
+          docker build \
+            --build-arg VITE_API_URL=${{ steps.backend.outputs.url }} \
+            -t ${{ env.REGISTRY }}/frontend:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/frontend:latest \
+            ./frontend
+          docker push ${{ env.REGISTRY }}/frontend:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/frontend:latest
+
+      - name: Deploy frontend to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: cando-frontend
+          region: ${{ env.REGION }}
+          image: ${{ env.REGISTRY }}/frontend:${{ github.sha }}
+          flags: --allow-unauthenticated
