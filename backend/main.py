@@ -379,9 +379,14 @@ _scheduler.add_job(_resolve_expired_auctions_job, "interval", seconds=60, id="re
 @app.on_event("startup")
 def on_startup():
     from db import engine
-    create_tables()
-    with Session(engine) as session:
-        seed(session, Concept)
+    try:
+        create_tables()
+        with Session(engine) as session:
+            seed(session, Concept)
+    except Exception as exc:
+        # In produzione il DB potrebbe non essere ancora raggiungibile al primo avvio;
+        # il container parte comunque e le tabelle vengono create al primo accesso.
+        print(f"WARNING: startup DB init failed: {exc}")
     _scheduler.start()
 
 @app.on_event("shutdown")
