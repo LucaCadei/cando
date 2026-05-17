@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { SAMPLES } from "../constants.js";
 import { Badge } from "./Badge.jsx";
 import { CoinAmount } from "./CoinIcon.jsx";
 import s from "../styles.js";
+import { useIsMobile } from "../hooks/useIsMobile.js";
 
 // Scheda compatta nel carosello landing — niente interazioni
 function SampleCard({ concept }) {
@@ -30,12 +30,14 @@ function StatBlock({ value, label }) {
 }
 
 export function LandingPage({ onLogin, onRegister }) {
+  const isMobile = useIsMobile();
+
   return (
     <main style={s.landingMain}>
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section style={{ borderBottom: "2px solid #0E0E0C", padding: "0" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "64px 40px 72px", display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 48, alignItems: "end" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: isMobile ? "40px 20px 48px" : "64px 40px 72px", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.5fr 1fr", gap: isMobile ? 32 : 48, alignItems: "end" }}>
 
           <div>
             <span style={s.heroEyebrow}>↘ la piazza dei concetti · 2026</span>
@@ -104,16 +106,20 @@ export function LandingPage({ onLogin, onRegister }) {
       </section>
 
       {/* ── Come funziona ─────────────────────────────────────────── */}
-      <section style={{ borderTop: "2px solid #0E0E0C", padding: "64px 40px" }}>
+      <section style={{ borderTop: "2px solid #0E0E0C", padding: isMobile ? "40px 20px" : "64px 40px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <span style={{ ...s.heroEyebrow, marginBottom: 40, display: "inline-block" }}>↘ come funziona</span>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: "2px solid #0E0E0C" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 0, border: "2px solid #0E0E0C" }}>
             {[
               { n: "01", title: "esplora il catalogo", desc: "Sfoglia concetti per categoria — numeri, date, idee, filosofie. Ogni oggetto è unico." },
               { n: "02", title: "acquista o offri", desc: "Compra al prezzo fisso con i tuoi cando coin, o fai un'offerta al venditore." },
               { n: "03", title: "possiedi e rivendi", desc: "Il concetto è tuo. Puoi tenerlo, metterlo in vendita o accettare offerte da altri collezionisti." },
             ].map((step, i) => (
-              <div key={step.n} style={{ padding: "36px 32px", borderRight: i < 2 ? "2px solid #0E0E0C" : "none" }}>
+              <div key={step.n} style={{
+                padding: isMobile ? "28px 24px" : "36px 32px",
+                borderRight: !isMobile && i < 2 ? "2px solid #0E0E0C" : "none",
+                borderBottom: isMobile && i < 2 ? "2px solid #0E0E0C" : "none",
+              }}>
                 <div style={{ fontFamily: "var(--f-mono)", fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", color: "#5C5A52", marginBottom: 16 }}>{step.n}</div>
                 <h3 style={{ fontFamily: "var(--f-body)", fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>{step.title}</h3>
                 <p style={{ fontFamily: "var(--f-body)", fontSize: 13, fontWeight: 500, color: "#5C5A52", lineHeight: 1.6 }}>{step.desc}</p>

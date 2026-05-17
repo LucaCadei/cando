@@ -362,6 +362,23 @@ const s = {
     background: "#FF3B30", color: BG, cursor: "pointer", flexShrink: 0,
   },
 
+  // ── varianti mobile ───────────────────────────────────────────────────
+  gridMobile:  { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 },
+  gridTablet:  { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 },
+  profileInnerMobile: { maxWidth: 960, margin: "0 auto", padding: "0 16px" },
+
+  profileStatsMobile: {
+    display: "grid", gridTemplateColumns: "1fr 1fr",
+    background: YEL, border: B, boxShadow: `4px 4px 0 ${INK}`,
+    marginBottom: 32,
+  },
+  profileStatItemMobile: { textAlign: "center", padding: "16px 12px" },
+
+  modalMobile: {
+    background: BG, border: B, boxShadow: `8px 8px 0 ${INK}`,
+    padding: "28px 20px", width: "calc(100vw - 32px)", maxWidth: 400, position: "relative",
+  },
+
   // ── user row (risultati ricerca utenti in pagine) ─────────────────────
   userRow: {
     display: "flex", alignItems: "center", gap: 14, padding: "14px 18px",

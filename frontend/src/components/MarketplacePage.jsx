@@ -4,6 +4,7 @@ import { Badge } from "./Badge.jsx";
 import { ConceptCard } from "./Cards.jsx";
 import { ConceptDetailModal } from "./ConceptDetailModal.jsx";
 import s from "../styles.js";
+import { useIsMobile } from "../hooks/useIsMobile.js";
 
 const INK = "#0E0E0C";
 const BG  = "#E5E4DF";
@@ -75,6 +76,8 @@ export function MarketplacePage({ user, onBuy, saved, onToggleSave }) {
   const [types, setTypes]         = useState(new Set(ALL_TYPES));
   const [sort, setSort]           = useState("default");
   const [panelOpen, setPanelOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const isTablet  = useIsMobile(1024);
 
   const savedIds = new Set(saved.map((c) => c.id));
 
@@ -109,11 +112,30 @@ export function MarketplacePage({ user, onBuy, saved, onToggleSave }) {
       return 0;
     });
 
+  const gridStyle = isMobile ? s.gridMobile : isTablet ? s.gridTablet : s.grid;
+  const filterPanelStyle = isMobile
+    ? {
+        position: "fixed", top: 0, bottom: 0, left: 0, zIndex: 300,
+        width: panelOpen ? 280 : 0, overflow: "hidden",
+        background: BG, borderRight: `2px solid ${INK}`,
+        transition: "width 220ms ease-out",
+        overflowY: "auto",
+      }
+    : { ...s.filterPanelOuter, width: panelOpen ? 240 : 0 };
+
   return (
     <div style={s.marketLayout}>
 
+      {/* Backdrop per filtri su mobile */}
+      {isMobile && panelOpen && (
+        <div
+          style={{ position: "fixed", inset: 0, background: "rgba(14,14,12,0.5)", zIndex: 299 }}
+          onClick={() => setPanelOpen(false)}
+        />
+      )}
+
       {/* ── Pannello filtri scorrevole ───────────────────── */}
-      <div style={{ ...s.filterPanelOuter, width: panelOpen ? 240 : 0 }}>
+      <div style={filterPanelStyle}>
         <div style={s.filterPanelInner}>
 
           {/* Header pannello */}
@@ -173,7 +195,7 @@ export function MarketplacePage({ user, onBuy, saved, onToggleSave }) {
       </div>
 
       {/* ── Griglia ──────────────────────────────────────── */}
-      <main style={s.marketMain}>
+      <main style={isMobile ? { ...s.marketMain, padding: "20px 16px" } : s.marketMain}>
         {error && <p style={s.errorMsg}>{error}</p>}
 
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
@@ -207,7 +229,7 @@ export function MarketplacePage({ user, onBuy, saved, onToggleSave }) {
             <p style={{ fontFamily: "var(--f-body)", fontSize: 13, fontWeight: 500, color: "#5C5A52" }}>prova a cambiare i filtri.</p>
           </div>
         ) : (
-          <div style={s.grid}>
+          <div style={gridStyle}>
             {visible.map((c) => (
               <ConceptCard
                 key={c.id}

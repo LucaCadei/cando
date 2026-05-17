@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { API } from "../constants.js";
 import s from "../styles.js";
+import { useIsMobile } from "../hooks/useIsMobile.js";
 
 const VIO = "#7C4DFF";
 
@@ -11,6 +12,7 @@ const VIO = "#7C4DFF";
  */
 export function Modal({ mode, onClose, onSwitch, onLogin }) {
   const isLogin = mode === "login";
+  const isMobile = useIsMobile();
 
   const [username, setUsername] = useState("");
   const [email, setEmail]       = useState("");
@@ -43,7 +45,7 @@ export function Modal({ mode, onClose, onSwitch, onLogin }) {
 
   return (
     <div style={s.overlay} onClick={onClose}>
-      <div style={s.modal} onClick={(e) => e.stopPropagation()}>
+      <div style={isMobile ? s.modalMobile : s.modal} onClick={(e) => e.stopPropagation()}>
         <button style={s.modalClose} onClick={onClose} aria-label="chiudi">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">
             <line x1="1" y1="1" x2="13" y2="13"/>
