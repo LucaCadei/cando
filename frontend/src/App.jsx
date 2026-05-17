@@ -12,6 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { API } from "./constants.js";
 import s from "./styles.js";
+import { useIsMobile } from "./hooks/useIsMobile.js";
 import { CandoCoinDefs, CoinAmount } from "./components/CoinIcon.jsx";
 import { LandingPage }        from "./components/LandingPage.jsx";
 import { MarketplacePage }    from "./components/MarketplacePage.jsx";
@@ -58,6 +59,7 @@ function Wordmark({ onClick }) {
 
 export default function App() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   // ── Stato utente ──────────────────────────────────────────────────────
   const [user, setUser]   = useState(null);
@@ -471,19 +473,23 @@ export default function App() {
       <CandoCoinDefs />
 
       {/* Header sticky */}
-      <header style={s.header}>
+      <header style={{ ...s.header, padding: isMobile ? "12px 16px" : "16px 40px" }}>
         <Wordmark onClick={() => user && navigate("/piazza")} />
 
-        <div style={s.headerCenter}>
-          {user && <UserSearch currentUserId={user.id} />}
-        </div>
+        {!isMobile && (
+          <div style={s.headerCenter}>
+            {user && <UserSearch currentUserId={user.id} />}
+          </div>
+        )}
 
-        <nav style={s.nav}>
+        <nav style={{ ...s.nav, gap: isMobile ? 6 : 10 }}>
           {user ? (
             <>
-              <span style={s.coinBadge}>
-                <CoinAmount amount={user.coins} size="sm" />
-              </span>
+              {!isMobile && (
+                <span style={s.coinBadge}>
+                  <CoinAmount amount={user.coins} size="sm" />
+                </span>
+              )}
               {/* Campana notifiche + dropdown */}
               <div ref={bellRef} style={{ position: "relative" }}>
                 <button
@@ -537,12 +543,12 @@ export default function App() {
                 }}>
                   {user.username[0].toUpperCase()}
                 </span>
-                {user.username}
+                {!isMobile && user.username}
               </button>
             </>
           ) : (
             <>
-              <button style={s.btnGhost} onClick={() => setModal("register")}>registrati</button>
+              {!isMobile && <button style={s.btnGhost} onClick={() => setModal("register")}>registrati</button>}
               <button style={s.btnPrimary} onClick={() => setModal("login")}>accedi</button>
             </>
           )}

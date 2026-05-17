@@ -3,6 +3,7 @@ import { OwnedCard, SavedCard } from "./Cards.jsx";
 import { ConceptDetailModal } from "./ConceptDetailModal.jsx";
 import { CoinAmount } from "./CoinIcon.jsx";
 import s from "../styles.js";
+import { useIsMobile } from "../hooks/useIsMobile.js";
 
 const INK = "#0E0E0C";
 const BG  = "#E5E4DF";
@@ -49,6 +50,7 @@ function SettingsSection({ user, onLogout }) {
 export function ProfilePage({ user, purchases, saved, purchaseHistory = [], receivedOffers, sentOfferUpdates = [], followNotifs = [], auctionNotifs = [], myBids = [], onFollowBack, onToggleSave, onRelist, onUnlist, onStartAuction, onAcceptOffer, onRejectOffer, onLogout, onBack, onOpenAuction }) {
   const [tab, setTab] = useState("acquistati");
   const [detailConcept, setDetailConcept] = useState(null);
+  const isMobile = useIsMobile();
 
   // Raggruppa le offerte pendenti per concept_id in modo che OwnedCard
   // riceva solo le proprie offerte
@@ -59,7 +61,7 @@ export function ProfilePage({ user, purchases, saved, purchaseHistory = [], rece
 
   return (
     <div style={s.profileWrap}>
-      <div style={s.profileInner}>
+      <div style={isMobile ? s.profileInnerMobile : s.profileInner}>
 
         <button style={s.profileBack} onClick={onBack}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square">
@@ -96,23 +98,29 @@ export function ProfilePage({ user, purchases, saved, purchaseHistory = [], rece
         </div>
 
         {/* ── Stats strip gialla ───────────────────────────────── */}
-        <div style={s.profileStats}>
-          <div style={{ ...s.profileStatItem, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <div style={isMobile ? s.profileStatsMobile : s.profileStats}>
+          <div style={isMobile
+            ? { ...s.profileStatItemMobile, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderBottom: `2px solid ${INK}`, borderRight: `2px solid ${INK}` }
+            : { ...s.profileStatItem, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
             <CoinAmount amount={user.coins} size="lg" />
             <p style={{ ...s.statLabel, marginTop: 6 }}>saldo</p>
           </div>
-          <div style={s.profileStatDivider} />
-          <div style={s.profileStatItem}>
+          {!isMobile && <div style={s.profileStatDivider} />}
+          <div style={isMobile
+            ? { ...s.profileStatItemMobile, borderBottom: `2px solid ${INK}` }
+            : s.profileStatItem}>
             <p style={s.profileStatNum}>{purchaseHistory.reduce((acc, h) => acc + h.price, 0).toLocaleString("it-IT")}</p>
             <p style={s.statLabel}>portafoglio cc</p>
           </div>
-          <div style={s.profileStatDivider} />
-          <div style={s.profileStatItem}>
+          {!isMobile && <div style={s.profileStatDivider} />}
+          <div style={isMobile
+            ? { ...s.profileStatItemMobile, borderRight: `2px solid ${INK}` }
+            : s.profileStatItem}>
             <p style={s.profileStatNum}>{purchases.length}</p>
             <p style={s.statLabel}>acquistati</p>
           </div>
-          <div style={s.profileStatDivider} />
-          <div style={s.profileStatItem}>
+          {!isMobile && <div style={s.profileStatDivider} />}
+          <div style={isMobile ? s.profileStatItemMobile : s.profileStatItem}>
             <p style={s.profileStatNum}>{saved.length}</p>
             <p style={s.statLabel}>salvati</p>
           </div>
@@ -278,7 +286,7 @@ export function ProfilePage({ user, purchases, saved, purchaseHistory = [], rece
         )}
 
         {/* ── Tab bar ─────────────────────────────────────────── */}
-        <div style={s.profileTabBar}>
+        <div style={isMobile ? { ...s.profileTabBar, overflowX: "auto", flexWrap: "nowrap", WebkitOverflowScrolling: "touch" } : s.profileTabBar}>
           {PROFILE_TABS.map(({ id, label }) => {
             const count = id === "acquistati" ? purchases.length : id === "salvati" ? saved.length : id === "aste" ? myBids.length : id === "storico" ? purchaseHistory.length : null;
             return (
